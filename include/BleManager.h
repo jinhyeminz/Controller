@@ -3,8 +3,8 @@
 #include <ArduinoBLE.h>
 
 void initBLE();
-void sendButtonCommand(uint8_t id, uint8_t action);
+void sendButtonCommand(int buttonIndex, int action);
 void checkBLEEvents();
 bool isBLEConnected();
 
-#endif
+#endif  

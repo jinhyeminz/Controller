@@ -10,8 +10,8 @@ void setup() {
   
   Serial.println("System Starting...");
 
-  initPeripherals(); // 하드웨어(버튼, 레이저) 초기화
-  initBLE();         // BLE 초기화
+  initPeripherals();
+  initBLE();
   
   lastActionTime = millis();
 }
@@ -27,7 +27,7 @@ void loop() {
     if (btnIndex == 4) {
         controlLaser(true);
     } else {
-        // 레이저 외 버튼은 BLE 명령 전송
+        // 레이저 외에는 BLE 명령 전송
         sendButtonCommand(btnIndex, 1); 
     }
   } else {
@@ -36,7 +36,6 @@ void loop() {
 
   if (millis() - lastActionTime > SLEEP_TIMEOUT) {
     Serial.println("Timeout! Entering Deep Sleep...");
-    
     enterDeepSleep(); 
   }
 }

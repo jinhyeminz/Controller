@@ -1,11 +1,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define PIN_BTN_POWER   D2
-#define PIN_BTN_PRE     D3
-#define PIN_BTN_NEXT    D4
-#define PIN_BTN_PLAY    D5
-#define PIN_BTN_LASER   D6
+
+// Power, Pre, Next, Play, Laser
+const int buttonPins[5] = {D2, D3, D4, D5, D6}; 
+const uint8_t BUTTON_IDS[5] = {0x01, 0x02, 0x03, 0x04, 0x05};
+
 #define PIN_VIBRATION   D7
 #define PIN_LASER       D8
 
