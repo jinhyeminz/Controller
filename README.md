@@ -2,7 +2,7 @@
 
 ---
 
-📦 ESP32-BLE-Remote
+ ESP32-BLE-Remote
 
 ┣ include             # 헤더 (설정 및 선언)
 
