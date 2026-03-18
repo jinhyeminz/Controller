@@ -1,27 +1,39 @@
 #include "Peripherals.h"
 #include "Config.h"
 
-unsigned long lastDebounceTime = 0;
-int lastButtonState = HIGH;
+unsigned long lastDebounceTime[5] = {0, 0, 0, 0, 0};
+int lastButtonState[5] = {HIGH, HIGH, HIGH, HIGH, HIGH};
+int buttonStates[5] = {HIGH, HIGH, HIGH, HIGH, HIGH};
 
 void initPeripherals() {
-  for (int i = 0; i < 5; i++) pinMode(buttonPins[i], INPUT_PULLUP);
+  for (int i = 0; i < 5; i++){
+    pinMode(buttonPins[i], INPUT_PULLUP);
+  }
+  
   pinMode(PIN_VIBRATION, OUTPUT);
   pinMode(PIN_LASER, OUTPUT);
 
-  digitalWrite(PIN_LASER, LOW);
   digitalWrite(PIN_VIBRATION, LOW);
+  digitalWrite(PIN_LASER, LOW);
 }
 
 int checkButtons() {
+    unsigned long currentTime = millis();
     for (int i = 0; i < 5; i++) {
         int reading = digitalRead(buttonPins[i]);
         
-        if (reading == LOW) { // 버튼 눌림
-            // loop가 빠르기 때문에 non-blocking 방식이 좋지만 간단 구현을 위해 delay 사용
-            delay(DEBOUNCE_DELAY);
-            if (digitalRead(buttonPins[i]) == LOW) {
-                return i; // 눌린 버튼 인덱스 반환
+        if (reading != lastButtonState[i]) { // 버튼 눌림 -> 디바운스 타이머 갱신
+            lastDebounceTimes[i] = currentTime;
+            lastButtonStates[i] = reading;
+        }
+
+        if((currentTime - lastDebounceTime[i]) > DEBOUNCE_DELAY){
+            if(reading != buttonStates[i]){
+                buttonStates[i] = reading;
+
+                if(buttonStates[i] == LOW){
+                    return i;
+                }
             }
         }
     }
@@ -34,18 +46,4 @@ void controlLaser(bool state) {
 
 void controlVibration(bool state) {
     digitalWrite(PIN_VIBRATION, state ? HIGH : LOW);
-}
-
-
-void enterDeepSleep(){
-  
-  controlLaser(false);
-  controlVibration(false);
-  digitalWrite(PIN_VIBRATION, LOW);
-
-  // 깨어날 조건, Power 버튼 -> LOW
-  esp_sleep_enable_ext0_wakeup((gpio_num_t)D2, 0);
-  
-  // 딥슬립 모드
-  esp_deep_sleep_start();
 }

@@ -30,7 +30,7 @@ void initBLE() {
 }
 
 void checkBLEEvents() {
-    BLE.poll(); // BLE 이벤트 처리 (필수)
+    BLE.poll(); // BLE 이벤트 처리
 }
 
 bool isBLEConnected() {
@@ -54,7 +54,7 @@ void sendButtonCommand(int buttonIndex, int action) {
     buttonCharacteristic.writeValue(packet, 2);
 }
 
-// 라즈베리파이에서 데이터가 오면 실행되는 함수
+// 진동모터 값 받는 함수
 void onBLEWrite(BLEDevice central, BLECharacteristic characteristic) {
     uint8_t buffer[2];
     int length = characteristic.readValue(buffer, sizeof(buffer));
